@@ -1,0 +1,68 @@
+/* Estilos para el contenedor del mapa */
+#map {
+    height: 70vh;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+/* Estilos para los controles del mapa */
+.leaflet-control {
+    margin: 10px;
+}
+
+/* Estilo para los popups */
+.leaflet-popup-content {
+    font-family: 'Roboto', sans-serif;
+    min-width: 200px;
+}
+
+/* Estilo para los títulos de las parcelas */
+.parcel-title {
+    color: #4E342E; /* Cocoa Brown */
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+/* Botones de acción */
+.parcel-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.parcel-actions button {
+    background-color: #2E7D32; /* Jungle Green */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.parcel-actions button:hover {
+    background-color: #1B5E20;
+}
+
+/* Leyenda */
+.legend {
+    padding: 6px 8px;
+    background: white;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    line-height: 18px;
+    color: #555;
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}

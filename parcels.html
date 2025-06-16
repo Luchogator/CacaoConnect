@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your cacao parcels with CacaoConnect - Track, monitor, and optimize your cacao production">
+  <title>My Parcels | CacaoConnect</title>
+  <link rel="stylesheet" href="css/wireframe.css">
+  <link rel="stylesheet" href="css/map.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tX/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+  <style>
+    /* Main container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .logo-icon {
+      background: #333;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-size: 1rem;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+
+    nav li {
+      margin-left: 20px;
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #666;
+    }
+
+    nav a.active {
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      border: 1px solid #333;
+      color: #333;
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-primary {
+      background: #333;
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .btn-primary:hover {
+      background: #555;
+      border-color: #555;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 40px 0 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Parcels Grid */
+    .parcels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    /* Parcel Card */
+    .parcel-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #eee;
+    }
+    
+    .parcel-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .parcel-image {
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .parcel-status {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #fff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .status-active {
+      color: #4CAF50;
+    }
+    
+    .status-inactive {
+      color: #f44336;
+    }
+    
+    .parcel-details {
+      padding: 20px;
+    }
+    
+    .parcel-title {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .parcel-location {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #666;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+    
+    .parcel-location i {
+      color: #999;
+    }
+    
+    .parcel-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+      padding: 15px 0;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .parcel-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .parcel-actions .btn {
+      flex: 1;
+      text-align: center;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+    }
+    
+    /* Footer */
+    footer {
+      background: #333;
+      color: #fff;
+      padding: 50px 0 20px;
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    
+    .footer-about {
+      max-width: 300px;
+    }
+    
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    
+    .footer-logo span {
+      color: #FFD700;
+    }
+    
+    .footer-about p {
+      color: #bbb;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .social-links a {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .social-links a:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    
+    .footer-column h4 {
+      color: #fff;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+    
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .footer-column li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-column a {
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-column a:hover {
+      color: #fff;
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      text-align: center;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    .footer-bottom span {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.8rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-about {
+        max-width: 100%;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .parcels-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-links {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .footer-links {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      nav li {
+        margin: 5px 10px;
+      }
+      
+      .parcel-actions {
+        flex-direction: column;
+      }
+    }
+    /* Estilos adicionales para el contenedor del mapa */
+    .map-container {
+      margin: 30px 0;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .map-header {
+      margin-bottom: 20px;
+    }
+    
+    .map-header h1 {
+      margin: 0 0 10px 0;
+      color: #4E342E; /* Cocoa Brown */
+    }
+    
+    .map-header p {
+      color: #666;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <img src="images/logo.png" alt="CacaoConnect Logo" class="logo-icon">
+          <span>Cacao<span style="color: var(--primary-green);">Connect</span></span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="parcels.html" class="active">My Parcels</a></li>
+            <li><a href="chat.html">Messages</a></li>
+            <li><a href="price-dashboard.html">Market Prices</a></li>
+            <li><a href="#" class="btn btn-outline">Login</a></li>
+            <li><a href="#" class="btn btn-primary">Sign Up</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="map-container">
+      <div class="map-header">
+        <h1>Parcelas de Cacao</h1>
+        <p>Explora las parcelas registradas en CacaoConnect</p>
+      </div>
+      <div id="map"></div>
+    </div>
+    <div class="page-header">
+      <h1><i class="fas fa-map-marked-alt"></i> My Parcels</h1>
+      <a href="#" class="btn btn-primary"><i class="fas fa-plus"></i> Add Parcel</a>
+    </div>
+      
+    <div class="parcels-grid">
+      <!-- Parcel 1 -->
+      <div class="parcel-card">
+        <div class="parcel-image">
+          <span class="parcel-status status-active"><i class="fas fa-circle"></i> Active</span>
+        </div>
+        <div class="parcel-details">
+          <h3 class="parcel-title">Main Cacao Plantation</h3>
+          <div class="parcel-location">
+            <i class="fas fa-map-marker-alt"></i> Huimbayoc, San Martín
+          </div>
+          <div class="parcel-stats">
+            <div class="stat">
+              <div class="stat-value">5.2 ha</div>
+              <div class="stat-label">Size</div>
+            </div>
+            <div class="stat">
+              <span class="stat-value">1,250</span>
+              <span class="stat-label">Plants</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">85%</span>
+              <span class="stat-label">Health</span>
+            </div>
+          </div>
+          <div class="parcel-actions">
+            <a href="parcel-detail.html" class="btn btn-outline">View Details</a>
+            <a href="#" class="btn btn-primary">View Stats</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parcel Card 2 -->
+      <div class="parcel-card">
+        <div class="parcel-image">
+          <span class="parcel-status status-inactive"><i class="fas fa-circle"></i> Inactive</span>
+        </div>
+        <div class="parcel-details">
+          <h3 class="parcel-title">El Dorado Plantation</h3>
+          <div class="parcel-location">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Tarapoto, San Martín</span>
+          </div>
+          <div class="parcel-stats">
+            <div class="stat">
+              <span class="stat-value">3.8</span>
+              <span class="stat-label">Hectares</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">920</span>
+              <span class="stat-label">Plants</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">72%</span>
+              <span class="stat-label">Health</span>
+            </div>
+          </div>
+          <div class="parcel-actions">
+            <a href="#" class="btn btn-outline">View Details</a>
+            <a href="#" class="btn btn-primary">View Stats</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+  
+  <!-- Nuestro archivo de mapa -->
+  <script src="js/map.js"></script>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-about">
+          <div class="footer-logo">Cacao<span style="color: var(--sunrise-yellow);">Connect</span></div>
+          <p>Connecting cacao producers with global markets through technology and sustainable practices.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Our Mission</a></li>
+              <li><a href="#">Team</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Guides</a></li>
+              <li><a href="#">FAQs</a></li>
+              <li><a href="#">Help Center</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Cookie Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p style="color: #ffffff;">&copy; 2025 CacaoConnect. All rights reserved. <span>Huimbayoc, San Martín, Perú</span></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

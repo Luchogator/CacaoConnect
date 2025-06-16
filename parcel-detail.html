@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View detailed information about your cacao parcel with CacaoConnect">
+  <title>Parcel Details | CacaoConnect</title>
+  <link rel="stylesheet" href="css/wireframe.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .parcel-detail {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    @media (max-width: 768px) {
+      .parcel-detail {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .parcel-sidebar {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      height: fit-content;
+      border: 1px solid var(--light-gray);
+    }
+    
+    .parcel-main {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      border: 1px solid var(--light-gray);
+    }
+    
+    .parcel-image {
+      width: 100%;
+      height: 200px;
+      background-color: var(--light);
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--medium);
+    }
+    
+    .parcel-meta {
+      margin-bottom: 1.5rem;
+    }
+    
+    .meta-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+    
+    .meta-item:last-child {
+      border-bottom: none;
+    }
+    
+    .meta-label {
+      color: var(--medium);
+      font-weight: 500;
+    }
+    
+    .meta-value {
+      color: var(--dark);
+      text-align: right;
+    }
+    
+    .section-title {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--light-gray);
+    }
+    
+    .chart-container {
+      height: 400px;
+      background-color: var(--light);
+      border-radius: var(--border-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--medium);
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <img src="images/logo.png" alt="CacaoConnect Logo" class="logo-icon">
+          <span>Cacao<span style="color: var(--primary-green);">Connect</span></span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="parcels.html" class="active">My Parcels</a></li>
+            <li><a href="chat.html">Messages</a></li>
+            <li><a href="price-dashboard.html">Market Prices</a></li>
+            <li><a href="#" class="btn btn-outline">Login</a></li>
+            <li><a href="#" class="btn btn-primary">Sign Up</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <h1><i class="fas fa-map-marked-alt"></i> Parcel Details</h1>
+      <p class="subtitle">View and manage your cacao parcel information</p>
+    </div>
+    
+    <div class="parcel-detail">
+      <aside class="parcel-sidebar">
+        <div class="parcel-image">
+          <i class="fas fa-map-marked-alt" style="font-size: 3rem;"></i>
+        </div>
+        <div class="parcel-meta">
+          <div class="meta-item">
+            <span class="meta-label">Parcel ID</span>
+            <span class="meta-value">#PC-2023-045</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Location</span>
+            <span class="meta-value">Pérez Zeledón</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Area</span>
+            <span class="meta-value">2.5 ha</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Variety</span>
+            <span class="meta-value">Criollo</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Status</span>
+            <span class="meta-value" style="color: var(--primary); font-weight: 500;">Active</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Last Updated</span>
+            <span class="meta-value">Jun 14, 2025</span>
+          </div>
+        </div>
+        <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">
+          <i class="fas fa-edit"></i> Edit Parcel
+        </a>
+      </aside>
+      
+      <div class="parcel-main">
+        <h2 class="section-title">NDVI Analysis</h2>
+        <div class="chart-container">
+          NDVI Chart Visualization
+        </div>
+        
+        <h2 class="section-title">Recent Activity</h2>
+        <div class="activity-list">
+          <div class="activity-item" style="padding: 1rem 0; border-bottom: 1px solid var(--light-gray);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 500; color: var(--dark);">Soil Test Completed</span>
+              <span style="color: var(--medium); font-size: 0.9rem;">Jun 12, 2025</span>
+            </div>
+            <p style="color: var(--medium); margin: 0;">Soil analysis shows optimal conditions for cacao growth.</p>
+          </div>
+          <div class="activity-item" style="padding: 1rem 0; border-bottom: 1px solid var(--light-gray);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 500; color: var(--dark);">Harvest Completed</span>
+              <span style="color: var(--medium); font-size: 0.9rem;">May 28, 2025</span>
+            </div>
+            <p style="color: var(--medium); margin: 0;">Harvested 120kg of cacao beans.</p>
+          </div>
+          <div class="activity-item" style="padding: 1rem 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 500; color: var(--dark);">Parcel Registered</span>
+              <span style="color: var(--medium); font-size: 0.9rem;">Jan 15, 2025</span>
+            </div>
+            <p style="color: var(--medium); margin: 0;">New cacao parcel added to your account.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-about">
+          <div class="footer-logo">Cacao<span>Connect</span></div>
+          <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Empowering cacao producers and connecting them with global markets through technology.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">How It Works</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Testimonials</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Contact Us</h4>
+          <ul>
+            <li><i class="fas fa-envelope" style="margin-right: 8px;"></i> info@cacaoconnect.com</li>
+            <li><i class="fas fa-phone" style="margin-right: 8px;"></i> +1 (555) 123-4567</li>
+            <li><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> 123 Cacao Street, San Martin, Peru</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        <p style="color: #ffffff;">&copy; 2025 CacaoConnect. All rights reserved. | Designed with <i class="fas fa-heart" style="color: #e74c3c;"></i> by Luis Lizano</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

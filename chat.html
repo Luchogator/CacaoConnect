@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Connect with cacao buyers and sellers through CacaoConnect's secure messaging platform">
+  <title>Messages | CacaoConnect</title>
+  <link rel="stylesheet" href="css/wireframe.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Chat-specific styles */
+    .page-header {
+      margin-bottom: 2rem;
+    }
+    
+    .page-header h1 {
+      margin-bottom: 0.5rem;
+      color: #2c3e50;
+    }
+    
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+      margin-bottom: 0;
+    }
+    
+    .chat-container {
+      display: flex;
+      height: 65vh;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    
+    .chat-sidebar {
+      width: 320px;
+      border-right: 1px solid #ecf0f1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid #ecf0f1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8f9fa;
+    }
+    
+    .chat-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #2c3e50;
+    }
+    
+    .chat-search {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #ecf0f1;
+    }
+    
+    .chat-search input {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border: 1px solid #d6dbdf;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2399a1a7' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") no-repeat 12px center;
+      padding-left: 2.5rem;
+    }
+    
+    .chat-contacts {
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    .contact {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid #f1f3f4;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .contact:hover, .contact.active {
+      background: #f8f9fa;
+    }
+    
+    .contact-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .contact-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 12px;
+      font-size: 0.9rem;
+    }
+    
+    .contact-details {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .contact-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    
+    .contact-name {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .contact-time {
+      font-size: 0.75rem;
+      color: #7f8c8d;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+    
+    .contact-preview {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #f8f9fa;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background: #f8f9fa;
+    }
+    
+    .message {
+      margin-bottom: 1rem;
+      max-width: 70%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .message.received {
+      margin-right: auto;
+      align-items: flex-start;
+    }
+    
+    .message.sent {
+      margin-left: auto;
+      align-items: flex-end;
+    }
+    
+    .message-content {
+      padding: 0.75rem 1rem;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      max-width: 100%;
+      word-wrap: break-word;
+      position: relative;
+    }
+    
+    .message.received .message-content {
+      background: #fff;
+      border-top-left-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .message.sent .message-content {
+      background: var(--primary-color);
+      color: white;
+      border-top-right-radius: 4px;
+    }
+    
+    .message-time {
+      font-size: 0.7rem;
+      color: #95a5a6;
+      margin-top: 4px;
+      padding: 0 0.5rem;
+    }
+    
+    .chat-input-container {
+      padding: 1rem;
+      border-top: 1px solid #e0e0e0;
+      background: #fff;
+    }
+    
+    .chat-input {
+      display: flex;
+      align-items: center;
+      background: #f1f3f4;
+      border-radius: 24px;
+      padding: 0.5rem 1rem;
+      transition: background 0.2s;
+    }
+    
+    .chat-input:focus-within {
+      background: #e8f0fe;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      padding: 0.5rem 0;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      outline: none;
+      color: #2c3e50;
+    }
+    
+    .chat-input input::placeholder {
+      color: #95a5a6;
+    }
+    
+    .chat-input button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    
+    .chat-input button:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    
+    .no-chat-selected {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #95a5a6;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .no-chat-selected i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #e0e0e0;
+    }
+    
+    .no-chat-selected h3 {
+      color: #7f8c8d;
+      margin-bottom: 0.5rem;
+    }
+    
+    .no-chat-selected p {
+      max-width: 400px;
+      line-height: 1.5;
+    }
+    
+    .btn-icon {
+      background: none;
+      border: none;
+      color: #7f8c8d;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    
+    .btn-icon:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    
+    @media (max-width: 992px) {
+      .chat-container {
+        height: 70vh;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .chat-container {
+        flex-direction: column;
+        height: 70vh;
+      }
+      
+      .chat-sidebar {
+        width: 100%;
+        max-height: 40%;
+        border-right: none;
+        border-bottom: 1px solid #ecf0f1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <img src="images/logo.png" alt="CacaoConnect Logo" class="logo-icon">
+          <span>Cacao<span style="color: var(--primary-green);">Connect</span></span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="parcels.html">My Parcels</a></li>
+            <li><a href="chat.html" class="active">Messages</a></li>
+            <li><a href="price-dashboard.html">Market Prices</a></li>
+            <li><a href="#" class="btn btn-outline">Login</a></li>
+            <li><a href="#" class="btn btn-primary">Sign Up</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container" style="padding: 2rem 0;">
+    <div class="page-header">
+      <h1>Messages</h1>
+      <p class="subtitle">Connect with buyers and cacao producers</p>
+    </div>
+    
+    <div class="chat-container">
+      <!-- Sidebar with contacts -->
+      <div class="chat-sidebar">
+        <div class="chat-header">
+          <h3>Conversations</h3>
+          <button class="btn-icon" aria-label="More options">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+        
+        <div class="chat-search">
+          <input type="text" placeholder="Search conversations...">
+        </div>
+        
+        <div class="chat-contacts">
+          <!-- Contact 1 -->
+          <div class="contact active">
+            <div class="contact-info">
+              <div class="contact-avatar">JB</div>
+              <div class="contact-details">
+                <div class="contact-header">
+                  <span class="contact-name">John's Beans Co.</span>
+                  <span class="contact-time">2h ago</span>
+                </div>
+                <div class="contact-preview">Thanks for the samples! When can we...</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Contact 2 -->
+          <div class="contact">
+            <div class="contact-info">
+              <div class="contact-avatar" style="background: #28a745;">AC</div>
+              <div class="contact-details">
+                <div class="contact-header">
+                  <span class="contact-name">Amazon Cacao</span>
+                  <span class="contact-time">1d ago</span>
+                </div>
+                <div class="contact-preview">We're interested in your premium cacao...</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Contact 3 -->
+          <div class="contact">
+            <div class="contact-info">
+              <div class="contact-avatar" style="background: #6f42c1;">SC</div>
+              <div class="contact-details">
+                <div class="contact-header">
+                  <span class="contact-name">Sustainable Chocolates</span>
+                  <span class="contact-time">3d ago</span>
+                </div>
+                <div class="contact-preview">Do you have any organic cacao available...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main chat area -->
+      <div class="chat-main">
+        <!-- Chat header -->
+        <div class="chat-header">
+          <div class="contact-info">
+            <div class="contact-avatar">JB</div>
+            <div>
+              <div class="contact-name">John's Beans Co.</div>
+              <div class="contact-status">Online</div>
+            </div>
+          </div>
+          <div class="chat-actions">
+            <button class="btn-icon" aria-label="Call">
+              <i class="fas fa-phone"></i>
+            </button>
+            <button class="btn-icon" aria-label="Video call">
+              <i class="fas fa-video"></i>
+            </button>
+            <button class="btn-icon" aria-label="More options">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="chat-messages">
+          <!-- Received message -->
+          <div class="message received">
+            <div class="message-content">
+              Hi there! I'm interested in your cacao beans. Do you have any samples available?
+            </div>
+            <div class="message-time">Yesterday, 2:30 PM</div>
+          </div>
+          
+          <!-- Sent message -->
+          <div class="message sent">
+            <div class="message-content">
+              Hello! Yes, we can send you samples of our premium cacao. What's your address?
+            </div>
+            <div class="message-time">Yesterday, 2:45 PM</div>
+          </div>
+          
+          <!-- Received message -->
+          <div class="message received">
+            <div class="message-content">
+              That's great! Our address is 123 Chocolate Lane, Cacao City. How soon can you ship?
+            </div>
+            <div class="message-time">Yesterday, 3:10 PM</div>
+          </div>
+        </div>
+        
+        <!-- Chat input -->
+        <div class="chat-input-container">
+          <div class="chat-input">
+            <button class="btn-icon" aria-label="Add emoji">
+              <i class="far fa-smile"></i>
+            </button>
+            <button class="btn-icon" aria-label="Attach file">
+              <i class="fas fa-paperclip"></i>
+            </button>
+            <input type="text" placeholder="Type a message...">
+            <button class="btn-icon" aria-label="Send message">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-about">
+          <div class="footer-logo">Cacao<span style="color: var(--sunrise-yellow);">Connect</span></div>
+          <p>Connecting cacao producers with global markets through technology and sustainable practices.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Our Mission</a></li>
+              <li><a href="#">Team</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Guides</a></li>
+              <li><a href="#">FAQs</a></li>
+              <li><a href="#">Help Center</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Cookie Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p style="color: #ffffff;">&copy; 2025 CacaoConnect. All rights reserved. <span>Huimbayoc, San Martín, Perú</span></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
