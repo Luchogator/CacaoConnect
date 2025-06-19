@@ -87,10 +87,10 @@ function initMap() {
             .bindPopup('CacaoConnect<br>Huimbayoc, San Martín, Perú')
             .openPopup();
 
-        // Parcelas irregulares, separadas y de distintos colores
-        const parcelas = [
+        // Parcels with English details
+        const parcels = [
             {
-                nombre: "Parcela 1",
+                name: "Parcel 1",
                 coords: [
                     [-7.195, -75.025],
                     [-7.194, -75.021],
@@ -98,11 +98,15 @@ function initMap() {
                     [-7.199, -75.022],
                     [-7.198, -75.025]
                 ],
-                color: '#e53935', // rojo
-                fillColor: '#ffcdd2'
+                color: '#e53935', // red
+                fillColor: '#ffcdd2',
+                owner: "Maria Lopez",
+                area: "2.5 ha",
+                production: "1200 kg/year",
+                certifications: "Organic, Fair Trade"
             },
             {
-                nombre: "Parcela 2",
+                name: "Parcel 2",
                 coords: [
                     [-7.210, -75.030],
                     [-7.209, -75.027],
@@ -110,11 +114,15 @@ function initMap() {
                     [-7.213, -75.025],
                     [-7.212, -75.029]
                 ],
-                color: '#3949ab', // azul
-                fillColor: '#c5cae9'
+                color: '#3949ab', // blue
+                fillColor: '#c5cae9',
+                owner: "Carlos Jimenez",
+                area: "3.1 ha",
+                production: "1500 kg/year",
+                certifications: "Rainforest Alliance"
             },
             {
-                nombre: "Parcela 3",
+                name: "Parcel 3",
                 coords: [
                     [-7.200, -75.040],
                     [-7.199, -75.037],
@@ -122,21 +130,63 @@ function initMap() {
                     [-7.204, -75.036],
                     [-7.203, -75.039]
                 ],
-                color: '#43a047', // verde
-                fillColor: '#a5d6a7'
+                color: '#43a047', // green
+                fillColor: '#a5d6a7',
+                owner: "Ana Torres",
+                area: "1.8 ha",
+                production: "900 kg/year",
+                certifications: "Organic"
+            },
+            {
+                name: "Parcel 4",
+                coords: [
+                    [-7.205, -75.015],
+                    [-7.204, -75.012],
+                    [-7.207, -75.010],
+                    [-7.208, -75.013],
+                    [-7.206, -75.016]
+                ],
+                color: '#fbc02d', // yellow
+                fillColor: '#fff9c4',
+                owner: "Luis Fernandez",
+                area: "2.9 ha",
+                production: "1100 kg/year",
+                certifications: "Fair Trade"
+            },
+            {
+                name: "Parcel 5",
+                coords: [
+                    [-7.215, -75.020],
+                    [-7.214, -75.017],
+                    [-7.217, -75.015],
+                    [-7.218, -75.018],
+                    [-7.216, -75.021]
+                ],
+                color: '#8e24aa', // purple
+                fillColor: '#e1bee7',
+                owner: "Sofia Ramirez",
+                area: "2.2 ha",
+                production: "1000 kg/year",
+                certifications: "Rainforest Alliance, Organic"
             }
         ];
 
-        // Dibujar los polígonos en el mapa
-        parcelas.forEach(parcela => {
-            L.polygon(parcela.coords, {
-                color: parcela.color,
-                fillColor: parcela.fillColor,
+        // Draw polygons and bind popups with details in English
+        parcels.forEach(parcel => {
+            L.polygon(parcel.coords, {
+                color: parcel.color,
+                fillColor: parcel.fillColor,
                 fillOpacity: 0.5,
                 weight: 2
             })
             .addTo(map)
-            .bindPopup(`<b>${parcela.nombre}</b><br>Huimbayoc, San Martín, Perú`);
+            .bindPopup(
+                `<b>${parcel.name}</b><br>` +
+                `<b>Owner:</b> ${parcel.owner}<br>` +
+                `<b>Area:</b> ${parcel.area}<br>` +
+                `<b>Estimated Production:</b> ${parcel.production}<br>` +
+                `<b>Certifications/Quality:</b> ${parcel.certifications}`
+            );
         });
 
         // Debug logging
