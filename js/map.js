@@ -34,10 +34,10 @@ function initMap() {
             delete mapElement._leaflet_id;
         }
 
-        // Coordenadas de Huimbayoc, San Martín, Perú
-        const initialLat = -7.1986;
-        const initialLng = -75.0199;
-        const initialZoom = 10;
+        // Coordinates for south of Pucalpillo, Huimbayoc, San Martin (rural area)
+        const initialLat = -6.479760;
+        const initialLng = -75.828237;
+        const initialZoom = 15;
 
         // Initialize the map with explicit options
         const map = L.map('map', {
@@ -52,7 +52,7 @@ function initMap() {
             zoomAnimation: true
         });
 
-        // Add OpenStreetMap base layer with error handling
+        // Add OpenStreetMap base layer
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19,
@@ -66,8 +66,21 @@ function initMap() {
             reuseTiles: true
         });
 
-        // Add the layer to the map
+        // Add ESRI World Imagery (satellite) base layer
+        const esriSatLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 19
+        });
+
+        // Add the default layer to the map
         osmLayer.addTo(map);
+
+        // Add layer control to switch between base maps
+        const baseMaps = {
+            "Map": osmLayer,
+            "Satellite": esriSatLayer
+        };
+        L.control.layers(baseMaps, null, { position: 'topright', collapsed: false }).addTo(map);
 
         // Add zoom control with a different position
         L.control.zoom({
@@ -81,22 +94,22 @@ function initMap() {
             position: 'bottomright'
         }).addTo(map);
 
-        // Add un marcador en Huimbayoc
+        // Add marker at the new location
         L.marker([initialLat, initialLng])
             .addTo(map)
-            .bindPopup('CacaoConnect<br>Huimbayoc, San Martín, Perú')
+            .bindPopup('CacaoConnect<br>Huimbayoc, San Martin, Peru')
             .openPopup();
 
-        // Parcels with English details
+        // Parcels with English details, now distributed around the rural area
         const parcels = [
             {
                 name: "Parcel 1",
                 coords: [
-                    [-7.195, -75.025],
-                    [-7.194, -75.021],
-                    [-7.197, -75.018],
-                    [-7.199, -75.022],
-                    [-7.198, -75.025]
+                    [initialLat + 0.001, initialLng + 0.001],
+                    [initialLat + 0.001, initialLng - 0.001],
+                    [initialLat, initialLng - 0.0015],
+                    [initialLat - 0.001, initialLng - 0.001],
+                    [initialLat - 0.001, initialLng + 0.001]
                 ],
                 color: '#e53935', // red
                 fillColor: '#ffcdd2',
@@ -108,11 +121,11 @@ function initMap() {
             {
                 name: "Parcel 2",
                 coords: [
-                    [-7.210, -75.030],
-                    [-7.209, -75.027],
-                    [-7.211, -75.023],
-                    [-7.213, -75.025],
-                    [-7.212, -75.029]
+                    [initialLat + 0.0015, initialLng + 0.0015],
+                    [initialLat + 0.0015, initialLng + 0.0005],
+                    [initialLat + 0.001, initialLng],
+                    [initialLat + 0.0005, initialLng + 0.0005],
+                    [initialLat + 0.0005, initialLng + 0.0015]
                 ],
                 color: '#3949ab', // blue
                 fillColor: '#c5cae9',
@@ -124,11 +137,11 @@ function initMap() {
             {
                 name: "Parcel 3",
                 coords: [
-                    [-7.200, -75.040],
-                    [-7.199, -75.037],
-                    [-7.202, -75.034],
-                    [-7.204, -75.036],
-                    [-7.203, -75.039]
+                    [initialLat - 0.001, initialLng + 0.0015],
+                    [initialLat - 0.0015, initialLng + 0.001],
+                    [initialLat - 0.002, initialLng + 0.0015],
+                    [initialLat - 0.002, initialLng + 0.0025],
+                    [initialLat - 0.001, initialLng + 0.0025]
                 ],
                 color: '#43a047', // green
                 fillColor: '#a5d6a7',
@@ -140,11 +153,11 @@ function initMap() {
             {
                 name: "Parcel 4",
                 coords: [
-                    [-7.205, -75.015],
-                    [-7.204, -75.012],
-                    [-7.207, -75.010],
-                    [-7.208, -75.013],
-                    [-7.206, -75.016]
+                    [initialLat - 0.0015, initialLng - 0.001],
+                    [initialLat - 0.0015, initialLng - 0.002],
+                    [initialLat - 0.0025, initialLng - 0.002],
+                    [initialLat - 0.0025, initialLng - 0.001],
+                    [initialLat - 0.0015, initialLng - 0.0005]
                 ],
                 color: '#fbc02d', // yellow
                 fillColor: '#fff9c4',
@@ -156,11 +169,11 @@ function initMap() {
             {
                 name: "Parcel 5",
                 coords: [
-                    [-7.215, -75.020],
-                    [-7.214, -75.017],
-                    [-7.217, -75.015],
-                    [-7.218, -75.018],
-                    [-7.216, -75.021]
+                    [initialLat + 0.0005, initialLng - 0.002],
+                    [initialLat + 0.001, initialLng - 0.0025],
+                    [initialLat + 0.0015, initialLng - 0.002],
+                    [initialLat + 0.0015, initialLng - 0.0015],
+                    [initialLat + 0.001, initialLng - 0.001]
                 ],
                 color: '#8e24aa', // purple
                 fillColor: '#e1bee7',
