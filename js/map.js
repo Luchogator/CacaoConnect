@@ -1,120 +1,162 @@
-// Configuración del mapa
-document.addEventListener('DOMContentLoaded', function() {
-    // Coordenadas iniciales (centro de América Latina)
-    const initialLat = -8.7832;
-    const initialLng = -55.4915;
-    const initialZoom = 4;
+// Prevent multiple map initializations
+if (typeof window.mapInitialized === 'undefined') {
+    window.mapInitialized = false;
+}
 
-    // Inicializar el mapa
-    const map = L.map('map').setView([initialLat, initialLng], initialZoom);
+function initMap() {
+    // Check if map is already initialized
+    if (window.mapInitialized) {
+        console.log('Map already initialized');
+        return;
+    }
 
-    // Añadir capa base de OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
-    }).addTo(map);
 
-    // Estilo para las parcelas
-    const parcelStyle = {
-        color: '#2E7D32', // Jungle Green
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.5,
-        fillColor: '#2E7D32'
-    };
+    // Check if the map container exists
+    const mapElement = document.getElementById('map');
+    if (!mapElement) {
+        console.error('Map container not found');
+        return;
+    }
 
-    // Datos de ejemplo de parcelas (en producción, esto vendría de tu API)
-    const parcelas = [
-        {
-            id: 1,
-            nombre: 'Finca El Cacaotal',
-            area: 5.2,
-            ubicacion: 'Chiapas, México',
-            variedad: 'Criollo',
-            coordenadas: [
-                [16.7569, -92.6375],
-                [16.7569, -92.6275],
-                [16.7469, -92.6275],
-                [16.7469, -92.6375],
-                [16.7569, -92.6375] // Cierra el polígono
-            ]
-        },
-        {
-            id: 2,
-            nombre: 'Hacienda Cacao Real',
-            area: 8.7,
-            ubicacion: 'Tabasco, México',
-            variedad: 'Forastero',
-            coordenadas: [
-                [17.9569, -92.9375],
-                [17.9569, -92.9275],
-                [17.9469, -92.9275],
-                [17.9469, -92.9375],
-                [17.9569, -92.9375]
-            ]
+    // Check if Leaflet is loaded
+    if (typeof L === 'undefined') {
+        console.error('Leaflet is not loaded');
+        return;
+    }
+
+
+    try {
+        // Clear any existing map instance
+        if (mapElement._leaflet_id) {
+            console.log('Removing existing map instance');
+            L.DomEvent.off(mapElement);
+            mapElement._leaflet_id = null;
+            delete mapElement._leaflet_id;
         }
-    ];
 
-    // Añadir parcelas al mapa
-    parcelas.forEach(parcela => {
-        const polygon = L.polygon(parcela.coordenadas, parcelStyle).addTo(map);
+        // Initial coordinates (center of South America)
+        const initialLat = -8.7832;
+        const initialLng = -55.4915;
+        const initialZoom = 4;
+
+        // Initialize the map with explicit options
+        const map = L.map('map', {
+            center: [initialLat, initialLng],
+            zoom: initialZoom,
+            zoomControl: false, // We'll add it manually later
+            preferCanvas: false, // Changed to false to help with rendering
+            renderer: L.svg(), // Changed to SVG renderer
+            attributionControl: true,
+            fadeAnimation: true,
+            markerZoomAnimation: true,
+            zoomAnimation: true
+        });
+
+        // Add OpenStreetMap base layer with error handling
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19,
+            minZoom: 2,
+            tileSize: 256,
+            zoomOffset: 0,
+            errorTileUrl: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRA==',
+            crossOrigin: true,
+            detectRetina: false,
+            updateWhenIdle: true,
+            reuseTiles: true
+        });
+
+        // Add the layer to the map
+        osmLayer.addTo(map);
+
+        // Add zoom control with a different position
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(map);
+
+        // Add scale control
+        L.control.scale({
+            imperial: false,
+            metric: true,
+            position: 'bottomright'
+        }).addTo(map);
+
+        // Add a simple marker to verify the map is working
+        L.marker([initialLat, initialLng])
+            .addTo(map)
+            .bindPopup('CacaoConnect<br>Centro de América del Sur')
+            .openPopup();
+
+        // Debug logging
+        console.log('Map initialized successfully');
+        console.log('Map container size:', mapElement.offsetWidth, 'x', mapElement.offsetHeight);
         
-        // Crear contenido del popup
-        const popupContent = `
-            <div class="parcel-popup">
-                <h4 class="parcel-title">${parcela.nombre}</h4>
-                <p><strong>Ubicación:</strong> ${parcela.ubicacion}</p>
-                <p><strong>Área:</strong> ${parcela.area} ha</p>
-                <p><strong>Variedad:</strong> ${parcela.variedad}</p>
-                <div class="parcel-actions">
-                    <button onclick="verDetalleParcela(${parcela.id})">Ver Detalles</button>
-                    <button onclick="mostrarRuta(${parcela.id})">Cómo Llegar</button>
-                </div>
-            </div>
-        `;
+        // Handle window resize with debounce
+        let resizeTimer;
+        const handleResize = function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                console.log('Resizing map...');
+                map.invalidateSize();
+            }, 100);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Mark as initialized
+        window.mapInitialized = true;
         
-        // Añadir popup al polígono
-        polygon.bindPopup(popupContent);
-    });
+        // Cleanup function
+        return function cleanup() {
+            window.removeEventListener('resize', handleResize);
+            if (map) {
+                map.remove();
+                window.mapInitialized = false;
+            }
+        };
 
-    // Añadir controles de capas
-    const baseLayers = {
-        'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }),
-        'Satélite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-        })
-    };
-
-    // Añadir capas base al control de capas
-    L.control.layers(baseLayers).addTo(map);
-
-    // Añadir control de escala
-    L.control.scale({
-        imperial: false,
-        metric: true
-    }).addTo(map);
-
-    // Añadir leyenda
-    const legend = L.control({ position: 'bottomright' });
-    legend.onAdd = function() {
-        const div = L.DomUtil.create('div', 'legend');
-        div.innerHTML += 
-            '<h4>Leyenda</h4>' +
-            '<i style="background: #2E7D32"></i> Parcelas de Cacao<br>';
-        return div;
-    };
-    legend.addTo(map);
-});
-
-// Funciones globales para los botones del popup
-function verDetalleParcela(id) {
-    // Redirigir a la página de detalles de la parcela
-    window.location.href = `parcel-detail.html?id=${id}`;
+    } catch (error) {
+        console.error('Error initializing map:', error);
+        if (mapElement) {
+            mapElement.innerHTML = 
+                '<div style="padding: 20px; color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;">' +
+                '<h3>Error al cargar el mapa</h3>' +
+                '<p>No se pudo cargar el mapa. Por favor, recarga la página o inténtalo de nuevo más tarde.</p>' +
+                (error ? '<p>Detalles: ' + error.message + '</p>' : '') +
+                '</div>';
+        }
+        return null;
+    }
 }
 
-function mostrarRuta(id) {
-    // Implementar lógica para mostrar ruta
-    alert(`Mostrando ruta a la parcela ${id}`);
+// Wait for all resources to be loaded before initializing the map
+function initializeMapWhenReady() {
+    // Check if Leaflet is loaded
+    if (typeof L === 'undefined') {
+        console.log('Leaflet not loaded yet, waiting...');
+        setTimeout(initializeMapWhenReady, 100);
+        return;
+    }
+
+    // Check if map container exists
+    const mapElement = document.getElementById('map');
+    if (!mapElement) {
+        console.error('Map container not found');
+        return;
+    }
+
+    // Initialize the map
+    initMap();
 }
+
+// Start initialization process
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    // If the document is already loaded, initialize immediately
+    setTimeout(initializeMapWhenReady, 0);
+} else {
+    // Otherwise, wait for the document to be fully loaded
+    window.addEventListener('load', initializeMapWhenReady);
+}
+
+// Also try to initialize if the page takes too long to load
+setTimeout(initializeMapWhenReady, 1000);
