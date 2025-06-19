@@ -73,7 +73,7 @@ function initMap() {
         });
 
         // Add the default layer to the map
-        osmLayer.addTo(map);
+        esriSatLayer.addTo(map);
 
         // Add layer control to switch between base maps
         const baseMaps = {
