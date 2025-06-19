@@ -262,6 +262,40 @@ function initMap() {
                 area: "2.4 ha",
                 production: "1120 kg/year",
                 certifications: "Organic"
+            },
+            // Main Cacao Plantation (Luis Lizano)
+            {
+                name: "Main Cacao Plantation",
+                coords: [
+                    [initialLat + 0.001, initialLng - 0.001],
+                    [initialLat + 0.0013, initialLng - 0.0013],
+                    [initialLat + 0.0015, initialLng - 0.001],
+                    [initialLat + 0.0012, initialLng - 0.0007],
+                    [initialLat + 0.0009, initialLng - 0.0008]
+                ],
+                color: '#795548', // brown
+                fillColor: '#d7ccc8',
+                owner: "Luis Lizano",
+                area: "4.2 ha",
+                production: "2,000 kg/year",
+                certifications: "Organic, Fair Trade"
+            },
+            // El Dorado Plantation (Luis Lizano)
+            {
+                name: "El Dorado Plantation",
+                coords: [
+                    [initialLat - 0.001, initialLng - 0.001],
+                    [initialLat - 0.0013, initialLng - 0.0013],
+                    [initialLat - 0.0015, initialLng - 0.001],
+                    [initialLat - 0.0012, initialLng - 0.0007],
+                    [initialLat - 0.0009, initialLng - 0.0008]
+                ],
+                color: '#388e3c', // green
+                fillColor: '#c8e6c9',
+                owner: "Luis Lizano",
+                area: "3.5 ha",
+                production: "1,600 kg/year",
+                certifications: "Rainforest Alliance"
             }
         ];
 
@@ -334,25 +368,42 @@ function initMap() {
         function renderSidebar(parcels, buyers) {
             const sidebar = document.getElementById('mapSidebar');
             if (!sidebar) return;
-            let html = '<h3>Producers</h3>';
-            parcels.forEach(parcel => {
-                html += `<div class="sidebar-card">
-                    <span class='sidebar-title'>${parcel.owner}</span>
-                    <span class='sidebar-label'>Parcel:</span> <span class='sidebar-value'>${parcel.name}</span><br>
-                    <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
-                    <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
-                    <span class='sidebar-label'>Certifications:</span> <span class='sidebar-value'>${parcel.certifications}</span>
-                </div>`;
-            });
-            html += '<h3>Buyers</h3>';
-            buyers.forEach(buyer => {
-                html += `<div class="sidebar-card">
-                    <span class='sidebar-title'>${buyer.name}</span>
-                    <span class='sidebar-label'>Years in market:</span> <span class='sidebar-value'>${buyer.years}</span><br>
-                    <span class='sidebar-label'>Price per kg:</span> <span class='sidebar-value'>${buyer.price}</span><br>
-                    <span class='sidebar-label'>Reputation:</span> <span class='sidebar-value'>${buyer.reputation}</span>
-                </div>`;
-            });
+            // Detect if we are in My Parcels page
+            const isMyParcels = window.location.pathname.toLowerCase().includes('parcels.html');
+            let html = '';
+            if (isMyParcels) {
+                // Solo mostrar las parcelas propias
+                const myParcels = parcels.filter(p => p.name === 'Main Cacao Plantation' || p.name === 'El Dorado Plantation');
+                html += '<h3>My Parcels</h3>';
+                myParcels.forEach(parcel => {
+                    html += `<div class="sidebar-card">
+                        <span class='sidebar-title'>${parcel.name}</span>
+                        <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
+                        <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
+                        <span class='sidebar-label'>Certifications:</span> <span class='sidebar-value'>${parcel.certifications}</span>
+                    </div>`;
+                });
+            } else {
+                html += '<h3>Producers</h3>';
+                parcels.forEach(parcel => {
+                    html += `<div class="sidebar-card">
+                        <span class='sidebar-title'>${parcel.owner}</span>
+                        <span class='sidebar-label'>Parcel:</span> <span class='sidebar-value'>${parcel.name}</span><br>
+                        <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
+                        <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
+                        <span class='sidebar-label'>Certifications:</span> <span class='sidebar-value'>${parcel.certifications}</span>
+                    </div>`;
+                });
+                html += '<h3>Buyers</h3>';
+                buyers.forEach(buyer => {
+                    html += `<div class="sidebar-card">
+                        <span class='sidebar-title'>${buyer.name}</span>
+                        <span class='sidebar-label'>Years in market:</span> <span class='sidebar-value'>${buyer.years}</span><br>
+                        <span class='sidebar-label'>Price per kg:</span> <span class='sidebar-value'>${buyer.price}</span><br>
+                        <span class='sidebar-label'>Reputation:</span> <span class='sidebar-value'>${buyer.reputation}</span>
+                    </div>`;
+                });
+            }
             sidebar.innerHTML = html;
         }
         renderSidebar(parcels, buyers);
