@@ -34,10 +34,10 @@ function initMap() {
             delete mapElement._leaflet_id;
         }
 
-        // Initial coordinates (center of South America)
-        const initialLat = -8.7832;
-        const initialLng = -55.4915;
-        const initialZoom = 4;
+        // Coordenadas de Huimbayoc, San Martín, Perú
+        const initialLat = -7.1986;
+        const initialLng = -75.0199;
+        const initialZoom = 10;
 
         // Initialize the map with explicit options
         const map = L.map('map', {
@@ -81,10 +81,10 @@ function initMap() {
             position: 'bottomright'
         }).addTo(map);
 
-        // Add a simple marker to verify the map is working
+        // Add un marcador en Huimbayoc
         L.marker([initialLat, initialLng])
             .addTo(map)
-            .bindPopup('CacaoConnect<br>Centro de América del Sur')
+            .bindPopup('CacaoConnect<br>Huimbayoc, San Martín, Perú')
             .openPopup();
 
         // Debug logging
