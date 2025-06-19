@@ -9,14 +9,68 @@
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     background-color: #e8f4f8;
+    display: flex;
+    flex-direction: row;
+}
+
+.map-sidebar {
+    width: 320px;
+    min-width: 220px;
+    max-width: 350px;
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    padding: 1.2rem 1rem 1rem 1rem;
+    overflow-y: auto;
+    z-index: 2;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.map-sidebar h3 {
+    margin-top: 0;
+    margin-bottom: 0.7em;
+    font-size: 1.3em;
+    color: #4E342E;
+    font-weight: 700;
+}
+
+.sidebar-card {
+    background: #f8f6f3;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(80,60,30,0.06);
+    border: 1px solid #e0e0e0;
+    margin-bottom: 1.1em;
+    padding: 0.9em 1em 0.7em 1em;
+    transition: box-shadow 0.2s;
+}
+.sidebar-card:hover {
+    box-shadow: 0 4px 16px rgba(80,60,30,0.13);
+}
+.sidebar-card b {
+    color: #2E7D32;
+    font-weight: 600;
+}
+.sidebar-card .sidebar-title {
+    font-size: 1.08em;
+    color: #3e2723;
+    font-weight: 700;
+    margin-bottom: 0.2em;
+    display: block;
+}
+.sidebar-card .sidebar-label {
+    color: #6d4c41;
+    font-weight: 500;
+    font-size: 0.98em;
+}
+.sidebar-card .sidebar-value {
+    color: #222;
+    font-weight: 400;
+    font-size: 0.98em;
 }
 
 #map {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    position: relative;
+    flex: 1 1 0%;
     width: 100%;
     height: 100%;
     z-index: 1;

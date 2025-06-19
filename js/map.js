@@ -330,6 +330,33 @@ function initMap() {
                 );
         });
 
+        // --- Sidebar with producers and buyers ---
+        function renderSidebar(parcels, buyers) {
+            const sidebar = document.getElementById('mapSidebar');
+            if (!sidebar) return;
+            let html = '<h3>Producers</h3>';
+            parcels.forEach(parcel => {
+                html += `<div class="sidebar-card">
+                    <span class='sidebar-title'>${parcel.owner}</span>
+                    <span class='sidebar-label'>Parcel:</span> <span class='sidebar-value'>${parcel.name}</span><br>
+                    <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
+                    <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
+                    <span class='sidebar-label'>Certifications:</span> <span class='sidebar-value'>${parcel.certifications}</span>
+                </div>`;
+            });
+            html += '<h3>Buyers</h3>';
+            buyers.forEach(buyer => {
+                html += `<div class="sidebar-card">
+                    <span class='sidebar-title'>${buyer.name}</span>
+                    <span class='sidebar-label'>Years in market:</span> <span class='sidebar-value'>${buyer.years}</span><br>
+                    <span class='sidebar-label'>Price per kg:</span> <span class='sidebar-value'>${buyer.price}</span><br>
+                    <span class='sidebar-label'>Reputation:</span> <span class='sidebar-value'>${buyer.reputation}</span>
+                </div>`;
+            });
+            sidebar.innerHTML = html;
+        }
+        renderSidebar(parcels, buyers);
+
         // Debug logging
         console.log('Map initialized successfully');
         console.log('Map container size:', mapElement.offsetWidth, 'x', mapElement.offsetHeight);
