@@ -549,42 +549,6 @@
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
   <!-- Load map script last -->
   <script src="js/map.js"></script>
-  <script>
-    // --- Sidebar for My Parcels ---
-    function renderMyParcelsSidebar() {
-      const sidebar = document.getElementById('mapSidebar');
-      if (!sidebar) return;
-      // Solo mostrar Main Cacao Plantation y El Dorado Plantation
-      const myParcels = [
-        {
-          name: "Main Cacao Plantation",
-          area: "4.2 ha",
-          production: "2,000 kg/year",
-          certifications: "Organic, Fair Trade",
-          location: "Huimbayoc, San Martín"
-        },
-        {
-          name: "El Dorado Plantation",
-          area: "3.5 ha",
-          production: "1,600 kg/year",
-          certifications: "Rainforest Alliance",
-          location: "Huimbayoc, San Martín"
-        }
-      ];
-      let html = '<h3>My Parcels</h3>';
-      myParcels.forEach(parcel => {
-        html += `<div class="sidebar-card">
-          <span class='sidebar-title'>${parcel.name}</span>
-          <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
-          <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
-          <span class='sidebar-label'>Certifications:</span> <span class='sidebar-value'>${parcel.certifications}</span><br>
-          <span class='sidebar-label'>Location:</span> <span class='sidebar-value'>${parcel.location}</span>
-        </div>`;
-      });
-      sidebar.innerHTML = html;
-    }
-    renderMyParcelsSidebar();
-  </script>
 
   <!-- Footer -->
   <footer>

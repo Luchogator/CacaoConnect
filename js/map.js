@@ -369,7 +369,7 @@ function initMap() {
             const sidebar = document.getElementById('mapSidebar');
             if (!sidebar) return;
             // Detect if we are in My Parcels page
-            const isMyParcels = window.location.pathname.toLowerCase().includes('parcels.html');
+            const isMyParcels = window.location.pathname.toLowerCase().includes('parcels');
             let html = '';
             if (isMyParcels) {
                 // Solo mostrar las parcelas propias
