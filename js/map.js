@@ -87,6 +87,58 @@ function initMap() {
             .bindPopup('CacaoConnect<br>Huimbayoc, San Martín, Perú')
             .openPopup();
 
+        // Parcelas irregulares, separadas y de distintos colores
+        const parcelas = [
+            {
+                nombre: "Parcela 1",
+                coords: [
+                    [-7.195, -75.025],
+                    [-7.194, -75.021],
+                    [-7.197, -75.018],
+                    [-7.199, -75.022],
+                    [-7.198, -75.025]
+                ],
+                color: '#e53935', // rojo
+                fillColor: '#ffcdd2'
+            },
+            {
+                nombre: "Parcela 2",
+                coords: [
+                    [-7.210, -75.030],
+                    [-7.209, -75.027],
+                    [-7.211, -75.023],
+                    [-7.213, -75.025],
+                    [-7.212, -75.029]
+                ],
+                color: '#3949ab', // azul
+                fillColor: '#c5cae9'
+            },
+            {
+                nombre: "Parcela 3",
+                coords: [
+                    [-7.200, -75.040],
+                    [-7.199, -75.037],
+                    [-7.202, -75.034],
+                    [-7.204, -75.036],
+                    [-7.203, -75.039]
+                ],
+                color: '#43a047', // verde
+                fillColor: '#a5d6a7'
+            }
+        ];
+
+        // Dibujar los polígonos en el mapa
+        parcelas.forEach(parcela => {
+            L.polygon(parcela.coords, {
+                color: parcela.color,
+                fillColor: parcela.fillColor,
+                fillOpacity: 0.5,
+                weight: 2
+            })
+            .addTo(map)
+            .bindPopup(`<b>${parcela.nombre}</b><br>Huimbayoc, San Martín, Perú`);
+        });
+
         // Debug logging
         console.log('Map initialized successfully');
         console.log('Map container size:', mapElement.offsetWidth, 'x', mapElement.offsetHeight);
