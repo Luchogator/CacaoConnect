@@ -289,11 +289,9 @@
     <div class="market-summary">
       <div class="summary-card">
         <h4>Current Price (USD/kg)</h4>
-        <div class="value">$3.42</div>
-        <div class="change price-up">
-          <i class="fas fa-arrow-up"></i>
-          <span>2.4% (24h)</span>
-        </div>
+        <div class="value" id="cacao-price">Cargando...</div>
+        <div style="font-size:0.9rem;color:#888;" id="cacao-date"></div>
+        <!-- Puedes agregar aquí el cambio porcentual si lo obtienes de la API -->
       </div>
       
       <div class="summary-card">
@@ -545,5 +543,7 @@
       </div>
     </div>
   </footer>
+
+  <script src="js/market-prices.js"></script>
 </body>
 </html>

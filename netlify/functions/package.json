@@ -1,0 +1,9 @@
+{
+  "name": "cacao-functions",
+  "version": "1.0.0",
+  "main": "cacao-price.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
