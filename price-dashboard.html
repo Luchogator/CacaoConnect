@@ -289,36 +289,23 @@
     <div class="market-summary">
       <div class="summary-card">
         <h4>Current Price (USD/kg)</h4>
-        <div class="value" id="cacao-price">Cargando...</div>
+        <div class="value" id="cacao-price">Loading...</div>
         <div style="font-size:0.9rem;color:#888;" id="cacao-date"></div>
-        <!-- Puedes agregar aquí el cambio porcentual si lo obtienes de la API -->
       </div>
-      
       <div class="summary-card">
         <h4>24h Volume</h4>
-        <div class="value">$1.2M</div>
-        <div class="change price-up">
-          <i class="fas fa-arrow-up"></i>
-          <span>5.7%</span>
-        </div>
+        <div class="value" id="cacao-volume">Loading...</div>
+        <div class="change" id="cacao-volume-change"></div>
       </div>
-      
       <div class="summary-card">
         <h4>Market Cap</h4>
-        <div class="value">$12.8B</div>
-        <div class="change price-down">
-          <i class="fas fa-arrow-down"></i>
-          <span>1.2%</span>
-        </div>
+        <div class="value" id="cacao-marketcap">Loading...</div>
+        <div class="change" id="cacao-marketcap-change"></div>
       </div>
-      
       <div class="summary-card">
         <h4>Price Change (7d)</h4>
-        <div class="value">+4.2%</div>
-        <div class="change price-up">
-          <i class="fas fa-arrow-up"></i>
-          <span>Stable</span>
-        </div>
+        <div class="value" id="cacao-change7d">Loading...</div>
+        <div class="change" id="cacao-change7d-label"></div>
       </div>
     </div>
     
@@ -425,36 +412,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Jun 14, 2025</td>
-                <td>$3.42</td>
-                <td class="price-up">+2.4%</td>
-                <td>$1.2M</td>
-              </tr>
-              <tr>
-                <td>Jun 13, 2025</td>
-                <td>$3.34</td>
-                <td class="price-down">-0.8%</td>
-                <td>$980K</td>
-              </tr>
-              <tr>
-                <td>Jun 12, 2025</td>
-                <td>$3.37</td>
-                <td class="price-up">+1.2%</td>
-                <td>$1.1M</td>
-              </tr>
-              <tr>
-                <td>Jun 11, 2025</td>
-                <td>$3.33</td>
-                <td class="price-stable">0.0%</td>
-                <td>$890K</td>
-              </tr>
-              <tr>
-                <td>Jun 10, 2025</td>
-                <td>$3.33</td>
-                <td class="price-up">+0.9%</td>
-                <td>$1.0M</td>
-              </tr>
+              <tr id="market-table-row-1"></tr>
+              <tr id="market-table-row-2"></tr>
+              <tr id="market-table-row-3"></tr>
+              <tr id="market-table-row-4"></tr>
+              <tr id="market-table-row-5"></tr>
             </tbody>
           </table>
         </div>
