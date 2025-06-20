@@ -28,13 +28,20 @@ exports.handler = async function(event, context) {
       };
     }
     // Buscar el valor más reciente disponible (último con valor válido)
-    const last = [...data.observations].reverse().find(obs => obs.value && obs.value !== '.' && obs.value !== null);
-    if (!last) {
+    const validObservations = data.observations.filter(obs => obs.value && obs.value !== '.' && obs.value !== null);
+    if (!validObservations.length) {
       return {
         statusCode: 404,
         body: JSON.stringify({ error: 'No cocoa price found in FRED API' })
       };
     }
+    // Último valor para el display principal
+    const last = validObservations[validObservations.length - 1];
+    // Historial: últimos 30 valores (o menos si no hay tantos)
+    const history = validObservations.slice(-30).map(obs => ({
+      date: obs.date,
+      price: parseFloat(obs.value) / 1000 // USD/kg
+    }));
     // Convertir el precio de USD/ton a USD/kg y formatear a dos decimales
     const pricePerTon = parseFloat(last.value);
     const pricePerKg = pricePerTon / 1000;
@@ -45,7 +52,12 @@ exports.handler = async function(event, context) {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ date: last.date, price: priceFormatted, name: data.seriess && data.seriess[0] ? data.seriess[0].title : 'Cocoa Price (FRED)' })
+      body: JSON.stringify({
+        date: last.date,
+        price: priceFormatted,
+        name: data.seriess && data.seriess[0] ? data.seriess[0].title : 'Cocoa Price (FRED)',
+        history: history
+      })
     };
   } catch (error) {
     return {
