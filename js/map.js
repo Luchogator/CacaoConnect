@@ -101,7 +101,8 @@ function initMap() {
             .openPopup();
 
         // Parcels with English details, now with irregular shapes (pentagons, hexagons, etc.) and not overlapping
-        const parcels = [
+        // Default demo parcels
+        let parcels = [
             {
                 name: "Parcel 1",
                 coords: [
@@ -299,6 +300,19 @@ function initMap() {
             }
         ];
 
+        // --- Merge user-created parcels from localStorage (if any) ---
+        try {
+            const userParcelsStr = localStorage.getItem('userParcels');
+            if (userParcelsStr) {
+                const userParcels = JSON.parse(userParcelsStr);
+                if (Array.isArray(userParcels)) {
+                    parcels = parcels.concat(userParcels);
+                }
+            }
+        } catch (e) {
+            console.error('localStorage userParcels error', e);
+        }
+
         // Draw polygons and bind popups with details in English
         parcels.forEach(parcel => {
             L.polygon(parcel.coords, {
@@ -368,26 +382,33 @@ function initMap() {
         function renderSidebar(parcels, buyers) {
             const sidebar = document.getElementById('mapSidebar');
             if (!sidebar) return;
-            // Detect if we are in My Parcels page
+            // Detect if we are on My Parcels page
             const isMyParcels = window.location.pathname.toLowerCase().includes('parcels');
             let html = '';
             if (isMyParcels) {
-                // Solo mostrar las parcelas propias
-                const myParcels = parcels.filter(p => p.name === 'Main Cacao Plantation' || p.name === 'El Dorado Plantation');
-                html += '<h3>My Parcels</h3>';
+                const fallbackImages = [
+                    'images/iStock-92396322.jpg',
+                    'images/images.jpg',
+                    'images/intercropping-coconut-cocoa-integrated-farming-600nw-1475363993.webp'
+                ];
+                let fi = 0;
+                const myParcels = parcels.filter(p => p.myParcel === true || p.owner.toLowerCase().includes('luis'));
+                html += '<h3>My Parcels</h3>';                
                 myParcels.forEach(parcel => {
-                    html += `<div class="sidebar-card">
-                        <span class='sidebar-title'>${parcel.name}</span>
-                        <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
-                        <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
-                        <span class='sidebar-label'>Certifications:</span> <span class='sidebar-value'>${parcel.certifications}</span>
-                    </div>`;
+                    if(!parcel.image){
+                        parcel.image = fallbackImages[fi % fallbackImages.length];
+                        fi++;}
+                    const thumb = parcel.image ? `<div class="sidebar-thumb" style="background-image:url(${parcel.image});"></div>` : '';
+                    html += `<div class="sidebar-card">${thumb}<div class="sidebar-info">
+                        <span class='sidebar-title'>${parcel.name}</span><br>
+                        <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area || '-'}</span>
+                    </div></div>`;
                 });
             } else {
                 html += '<h3>Producers</h3>';
                 parcels.forEach(parcel => {
                     html += `<div class="sidebar-card">
-                        <span class='sidebar-title'>${parcel.owner}</span>
+                        <span class='sidebar-title'>${parcel.owner}</span><br>
                         <span class='sidebar-label'>Parcel:</span> <span class='sidebar-value'>${parcel.name}</span><br>
                         <span class='sidebar-label'>Area:</span> <span class='sidebar-value'>${parcel.area}</span><br>
                         <span class='sidebar-label'>Production:</span> <span class='sidebar-value'>${parcel.production}</span><br>
@@ -397,7 +418,7 @@ function initMap() {
                 html += '<h3>Buyers</h3>';
                 buyers.forEach(buyer => {
                     html += `<div class="sidebar-card">
-                        <span class='sidebar-title'>${buyer.name}</span>
+                        <span class='sidebar-title'>${buyer.name}</span><br>
                         <span class='sidebar-label'>Years in market:</span> <span class='sidebar-value'>${buyer.years}</span><br>
                         <span class='sidebar-label'>Price per kg:</span> <span class='sidebar-value'>${buyer.price}</span><br>
                         <span class='sidebar-label'>Reputation:</span> <span class='sidebar-value'>${buyer.reputation}</span>
@@ -406,6 +427,7 @@ function initMap() {
             }
             sidebar.innerHTML = html;
         }
+
         renderSidebar(parcels, buyers);
 
         // Debug logging
